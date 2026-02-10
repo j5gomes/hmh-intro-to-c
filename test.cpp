@@ -20,6 +20,22 @@ int WINAPI WinMain(
     LPSTR lpCmdLine,
     int nCmdShow
 ) {
-    foo();
+   
+    char SmallS; // 8 bits - 256 different values [-128,127]
+    char unsigned SmallU; // 8 bits - 256 different values [0,255]
+
+    short MediumS; // 16 bits - 65536
+    short unsigned MediumU;
+
+    int LargeS; // 32 bits - 4 billion
+    int unsigned LargeU;
+
+
+    char unsigned Test;
+
+    Test = 255;
+    Test = Test + 1;
+
+
     return 0;
 }

@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="hmh-intro-to-c.vcxproj" />
+  <Project Path="hmh-intro-to-c.vcxproj" Id="3af8eac2-d782-4420-969c-3aa9b9f0927b" />
 </Solution>
