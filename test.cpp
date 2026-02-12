@@ -1,41 +1,38 @@
 #include <windows.h>
 
-
-// Funtion declaration
-int foo(void);
-
-
-// Funtion definition
-int foo(void)
+void bar(void)
 {
-    OutputDebugStringA("This is line break for windows.\r\n");
-    OutputDebugStringA("This is line break for unix.\n");
-    return 0;
+    int BarVariable = 100;
+    int* BarPointer = &BarVariable;
+
+
 }
 
+void foo(void)
+{
+    int FooVariable = 200;
+    int* FooPointer = &FooVariable;
+
+
+    bar();
+
+
+}
 
 int WINAPI WinMain(
     HINSTANCE hInstance,
     HINSTANCE hPrevInstance,
     LPSTR lpCmdLine,
     int nCmdShow
-) {
-   
-    char SmallS; // 8 bits - 256 different values [-128,127]
-    char unsigned SmallU; // 8 bits - 256 different values [0,255]
-
-    short MediumS; // 16 bits - 65536
-    short unsigned MediumU;
-
-    int LargeS; // 32 bits - 4 billion
-    int unsigned LargeU;
-
-
-    char unsigned Test;
+)
+{
+    unsigned char Test;
+    unsigned char* TestPointer = &Test;
 
     Test = 255;
     Test = Test + 1;
 
+    foo();
 
     return 0;
 }
