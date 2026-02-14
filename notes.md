@@ -1,5 +1,10 @@
 # Notes
 
+Byte -> [00010 1110]
+         |
+         |>Bite
+        
+
 ### VSTips 
 
 - Hover over hex to see its decimal value
@@ -276,17 +281,271 @@ we can see the code bytes by right clicking and checking then
 
 ### Looking at memory in more detail
 
+each value in the memory window correspondes to 8 bits of the memory in the computer
+
+#### what happens if we ask for more?
+
+for example 16 = unsigned short Test;
+
+- Where does that memory go?
+
+in this case it created added a bite
+
+0x000000CD0713F594  244   1 <- THIS ONE
+
+And if we see the binary:
+
+We want to know 500 in binary
+
+1. Since 500 is 16 bits we use `0000 0000 0000 0000`
+2. We add the powers of 2 on top of the binary until we reach the value of the power that is higher then owr number.
+3. Then we do the subsctractions until we reach the a value that is = or < than the result and we turn the bits on with 1.
+
+       52 1     
+       15 2631 8421 -> this are powers of 2
+       26 8426
+0000 0001 1111 0100 -> binary
+
+500 - 256 = 244
+244 - 128 = 166
+116 - 64 = 52
+52 - 32 = 20
+20 - 16 = 4
+
+and then we have the:
+
+(high byte)   (low byte)
+  0000 0001    1111 0100
+ 
+```
+0x000000CD0713F594  244   1 ...
+```
+
+*244 -> low byte
+
+              (this)
+0000 0001    1111 0100
+
+and if we look what is `1111 0100` in decimal
+
+1     
+2631 8421 -> this are powers of 2
+8426
+1111 0100 -> binary
+
+**add the 1s:**
+128 + 64 + 32 + 16 + 4 = 244!!!!
+
+*and the 1 is 1 in decimal!!
+
+#### why are they in there order?
+
+there is no reason, is just convention
+
+the CPU designer choose that the HIGH byte is the firstone
+
+This is called endianness.
+    - endianness is the order in which bytes within a word data type are transmitted over a data communication medium or addressed in computer memory, counting only byte significance compared to earliness. Endianness is primarily expressed as big-endian or little-endian. 
+
+ 
+**Little-endian and big-endian**
+
+Little-endian and big-endian define the byte order of multi-byte data in memory.
+
+Little-endian stores the least significant byte (LSB) at the lowest address. common in x86/ARM CPU.
+    0x78563412 -> 78 56 34 12 
+
+Big-endian stores the most significant byte (MSB) first.
+    0x78563412 -> 12 34 56 78
+
+---
+
+If we use a higher number like:
+
+```
+unsigned int Test;
+Test = 2*1000*1000*1000;
+```
+We are going to use more bytes:
+
+```
+(address)               (Bytes)
+0x000000FD61AFF674    0 148  53 119
+```
+
+We dont want to allways have to declare everything everywehere so for that we use **STRUCTS**
+
+
+## STRUCTS
+
+```
+struct projectile
+{
+    // NOTE(gomes): this are the members, or the "fields", of this structure!
+
+    char unsigned IsThisOnFire; // NOTE(gomes): 1 If it's on fire, 0 if it's not
+    int Damage; // NOTE(gomes): This is how much damage it does on impact
+    int ParticlesPerSecond; // NOTE(gomes): For special effects
+    short HowManyCooks; // NOTE(gomes): Too many cooks?
+};
+
+
+int WINAPI WinMain(
+    HINSTANCE hInstance,
+    HINSTANCE hPrevInstance,
+    LPSTR lpCmdLine,
+    int nCmdShow
+)
+{
+    projectile Test;
+
+    Test.IsThisOnFire = 1;
+    Test.Damage = 232321 + Test.IsThisOnFire;
+    Test.ParticlesPerSecond = 123123123;
+    Test.HowManyCooks = 50;
+
+    return 0;
+}
+
+// 1 byte + 4 bytes + 4 bytes + 2 bytes = 11 bytes
+```
+
+
+### sizeof(x)
+
+
+We can use `sizeof` to know the size of a variable in bytes
+
+
+example:
+```
+    int SizeOfChar = sizeof(char unsigned);
+    int SizeOfShort = sizeof(short);
+    int SizeOfInt = sizeof(int);
+    int SizeOfProjectile = sizeof(projectile);
+    int Size = sizeof(Test);
+
+Watch window results:
+    SizeOfChar	        1	int
+    SizeOfShort	        2	int
+	SizeOfInt	        4	int
+	SizeOfProjectile	16	int
+	Size	            16	int
+
+```
+
+### how does `Test` struct look they look in memory?
 
 
 
+(Address)             (IsThisOnFire)  (Damage)    (ParticlesPerSecond)   (HowManyCooks)
+0x00000031D9CFF5E8    1 204 204 204   1 0 0 0           1 0 0 0            1 0 204 204 ...
+                          |__|__|        |                 |                   |
+                             |           |_________________|                   |
+                             |                it wrote                    wrote 2 bytes
+                             |        4 bits because its a int.         because its a short
+                             |
+                It skiped 3 bytes to keep
+                    thigns in a 32 boundaty
+                it wrote only 1 bit because
+                        is an char.                      
+                  This non used bits are                   
+                    called PADDING                                
+
+**We can ask on each memory part and see that the number of the memory address goes up** 
+
+Like this:
+```
++	&Test.IsThisOnFire          0x00000031d9cff5e8 "\x1ÌÌÌ\x1"	unsigned char *
++   &Test.Damage	            0x00000031d9cff5ec {1}	                 int *
++   &Test.ParticlesPerSecond	0x00000031d9cff5f0 {1}	                 int *
++   &Test.HowManyCooks	        0x00000031d9cff5f4 {1}	                 short *
+```
+
+## Hexadecimals
+
+0 - 0
+1 - 1
+2 - 2
+3 - 3
+4 - 4
+5 - 5
+6 - 6
+7 - 7
+8 - 8
+9 - 9
+10 - A
+11 - B
+12 - C
+13 - D
+14 - E
+15 - F
+
+In C we write hexadecimals with the prefix `0x`
+
+0xA   = 10
+0xAA  = 16*10 + 10 = 170
+0xAAA = 16*16*10 + 16*10 + 10 = 2730
+
+444 = 4*100 + 4*10 + 4
+
+Usualy we only use hex values in C for specific bit things
+
+### Casting
+
+```
+    projectile Test;
 
 
+    int SizeOfChar = sizeof(char unsigned);
+    int SizeOfShort = sizeof(short);
+    int SizeOfInt = sizeof(int);
+    int SizeOfProjectile = sizeof(projectile);
+    int Size = sizeof(Test);
+
+    Test.IsThisOnFire = 1;
+    Test.Damage = 2;
+    Test.ParticlesPerSecond = 3;
+    Test.HowManyCooks = 4;
+
+    short *MrPointerMan = &Test;
+```
+
+This gives an error because C is a static tyoed language.
+
+```
+projectile *MrPointerMan = &Test;
+```
+this will not give an error becuase we are using the same type.
+
+But C let us do that because we have full control!!!
+
+```
+    unsigned short *MrPointerMan = (unsiged short *)&Test;
+```
+
+This is the address:
+
+```
+MrPointerMan	0x0000006e70b4f4a8 {-13311}	short *
+```
+
+And we can put the 8 after to se the values:
+-		MrPointerMan,8	0x00000019c9affb38 {52225, 52428, 2, 0, 3, 0, 4, 52428}	unsigned short[8]
+		[0]	52225	unsigned short
+		[1]	52428	unsigned short
+		[2]	2	    unsigned short
+		[3]	0	    unsigned short
+		[4]	3	    unsigned short
+		[5]	0	    unsigned short
+		[6]	4	    unsigned short
+		[7]	52428	unsigned short
 
 
+and this is the address:
 
-
-
-
-
+```
+0x0000006E70B4F4A8    1 204 204 204   2 0 0 0   3 0 0 0   4 0 204 204 
+```
 
 
