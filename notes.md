@@ -548,4 +548,43 @@ and this is the address:
 0x0000006E70B4F4A8    1 204 204 204   2 0 0 0   3 0 0 0   4 0 204 204 
 ```
 
+## Why there is so many 204s
+
+Becuase this is a debug build and VS does this
+
+### Arrays
+
+```
+projectile Projectile[40];
+```
+
+#### Arrow vs dot notation
+
+```
+projectile Test;
+Test.Damage;
+```
+
+We use arrow for pointers;
+```
+projectile *Test;
+Test->damage;
+```
+
+
+---
+Day 5
+---
+
+
+
+
+
+
+
+
+
+
+
+
 

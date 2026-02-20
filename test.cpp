@@ -53,5 +53,7 @@ int WINAPI WinMain(
     // short *MrPointerMan = &Test; We cant do this because C is static typed
     unsigned short* MrPointerMan = (unsigned short *)&Test; // but we can cast it
 
+    projectile Array[3];
+    Array->Damage;
     return 0;
 }
