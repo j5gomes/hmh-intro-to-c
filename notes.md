@@ -8,6 +8,7 @@ Byte -> [00010 1110]
 ### VSTips 
 
 - Hover over hex to see its decimal value
+- To debug the project run `devenv` and the executable file
 
 **Shortcuts**
 
